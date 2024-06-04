@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D GRACE - Clothing Brand</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .form-container.active {
+            display: block;
+        }
+        .form-container h2 {
+            margin-top: 0;
+        }
+        .form-container label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-container button {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #555;
+        }
+        .form-container .show-password {
+            display: flex;
+            align-items: center;
+            margin-top: -15px;
+            margin-bottom: 20px;
+        }
+        .form-container .show-password input {
+            margin-right: 10px;
+        }
+        .error-message {
+            color: red;
+            display: none;
+        }
+        .external-site {
+            display: none;
+            width: 100%;
+            height: 80vh;
+        }
+        .profile-container {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <script>
+        let userData = {};
+
+        function showLogin() {
+            document.getElementById('signup-form').classList.remove('active');
+            document.getElementById('login-form').classList.add('active');
+        }
+
+        function togglePasswordVisibility(passwordFieldId, checkbox) {
+            var passwordField = document.getElementById(passwordFieldId);
+            passwordField.type = checkbox.checked ? 'text' : 'password';
+        }
+
+        function storeUserData(event) {
+            event.preventDefault();
+            userData = {
+                firstName: document.getElementById('first-name').value,
+                lastName: document.getElementById('last-name').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
+            showLogin();
+        }
+
+        function validateLogin(event) {
+            event.preventDefault();
+            const loginEmail = document.getElementById('login-email').value;
+            const loginPassword = document.getElementById('login-password').value;
+            const errorMessage = document.getElementById('error-message');
+
+            if (loginEmail === userData.email && loginPassword === userData.password) {
+                document.getElementById('login-form').classList.remove('active');
+                document.getElementById('external-site').classList.add('active');
+                setTimeout(showProfile, 25000);
+            } else {
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        function showProfile() {
+            document.getElementById('external-site').classList.remove('active');
+            document.getElementById('profile-container').classList.add('active');
+            document.getElementById('profile-name').textContent = `${userData.firstName} ${userData.lastName}`;
+            document.getElementById('profile-email').textContent = userData.email;
+        }
+    </script>
+</head>
+<body>
+
+<header>
+    <h1>D GRACE</h1>
+    <p>Your Style, Our Passion</p>
+</header>
+
+<div class="container">
+    <!-- Sign Up Form -->
+    <div id="signup-form" class="form-container active">
+        <h2>Sign Up</h2>
+        <form onsubmit="storeUserData(event)">
+            <label for="first-name">First Name</label>
+            <input type="text" id="first-name" name="first-name" required>
+
+            <label for="last-name">Last Name</label>
+            <input type="text" id="last-name" name="last-name" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            
+            <div class="show-password">
+                <input type="checkbox" id="show-password-signup" onclick="togglePasswordVisibility('password', this)">
+                <label for="show-password-signup">Show Password</label>
+            </div>
+
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+
+    <!-- Login Form -->
+    <div id="login-form" class="form-container">
+        <h2>Login</h2>
+        <form onsubmit="validateLogin(event)">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" name="email" required>
+
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" name="password" required>
+            
+            <div class="show-password">
+                <input type="checkbox" id="show-password-login" onclick="togglePasswordVisibility('login-password', this)">
+                <label for="show-password-login">Show Password</label>
+            </div>
+
+            <div id="error-message" class="error-message">Incorrect email or password. Please try again.</div>
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
